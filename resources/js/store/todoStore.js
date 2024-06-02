@@ -1,4 +1,3 @@
-import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import axios from 'axios';
 
@@ -6,14 +5,14 @@ export const useTodoStore = defineStore('todoStore', {
     state: () => ({
         todos: [],
         todoForm: {
-            name: null,
-            email: null
+            name: '',
+            email: ''
         }
     }),
     getters: {
         completedTodos(state) {
             return state.todos.filter(todo => todo.completed);
-        },
+        }
     },
     actions: {
         async getLists() {
@@ -24,21 +23,17 @@ export const useTodoStore = defineStore('todoStore', {
                 console.error('Error fetching todo lists:', error);
             }
         },
-        // async createTask(){
-        //     const {data} = await axios.post('http://127.0.0.1:8000/api/users',this.todoForm);
-        //     // console.log(data);
-        //     this.todos.push(data);
-        //     this.todos.reverse();
-        //     this.todoForm.title = null;
-        // },
-        async submitForm(){
-            const {data} = await axios.post('http://127.0.0.1:8000/api/users/store',this.todoForm)
-            console.log(data)
-            this.todos.push(data);
-            this.todoForm.name = null;
-            this.todoForm.email = null;
+        async submitForm(router) {
+            try {
+                const { data } = await axios.post('http://127.0.0.1:8000/api/users/store', this.todoForm);
+                this.todoForm.name = '';
+                this.todoForm.email = '';
+                this.todos.push(data);
+
+                router.push({ name: 'List' });
+            } catch (error) {
+                console.error('Error submitting form:', error);
+            }
         }
-
-
     }
 });

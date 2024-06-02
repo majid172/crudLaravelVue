@@ -24,6 +24,6 @@ class UserController extends Controller
         $user->email = $request->email;
 
         $user->save();
-        return $user;
+        return response()->json(['message'=>'User inserted','user'=>$user],200);
     }
 }
